@@ -1,5 +1,5 @@
 /*
-ears_say
+ear_say_animatronic_robot_horse_ears
 ================
 Author:  Steve North
 Author URI:  http://socialsciences.exeter.ac.uk/sociology/staff/north/
