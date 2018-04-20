@@ -57,8 +57,28 @@ Copyright (c) 2018, The University of Exeter
 #define PITCH_BACK_SERVO_RIGHT_POSITION -90   //
 */
 
+/* ##################################  */
+
+// Params for random micro default ear movements (when not specifically triggered for specific movement behaviour)
+
+#define percentageTimeEarsRadomMicroMove 16 // range 1-100%
+#define percentageTimeEarsFlickForward 2 // range 1-100%
+#define percentageTimeEarsRadomFlickback 2 // range 1-100%
+#define percentageTimeEarsStatic 80 // range 1-100%
+// IMPORTANT: above values need to total 100%!!
+
+#define RANGE_FOR_RANDOM_MICRO_ANIMATIONS_RELATIVE_TO_CENTRED 7 // on a scale of 0-100, which is auto mapped to current servo increment range
+
+
+/* ##################################  */
+
+
 float X, Y, Z;
 
+#define DELAY_AFTER_EACH_LOOP_BEFORE_ACELEROMETER_CHECK 500 //
+
+
+// Trigger limits for accelerometer, to create events initiate specific ear move behaviours
 #define THRESHOLD_ROLL_LEFT 3   // threshold for...
 #define THRESHOLD_ROLL_RIGHT -3   // threshold for...
 #define THRESHOLD_PITCH_FORWARD 3   // threshold for...
@@ -82,8 +102,8 @@ float X, Y, Z;
 
 // ... but actual calibration for the TowerPro SG92R servo, in order to get closer to the 180 degree range, was 0.9ms - 2.5ms
 
-#define SERVO_MIN 900 // 0.9 ms pulse (started with value set at 1000)
-#define SERVO_MAX 2500 // 2.5 ms pulse (started with value set at 2000)
+#define SERVO_MIN 900 // 0.9 ms pulse (started with value set at 1000 and calibrated with TowerPro SG92R servo to get further movement range)
+#define SERVO_MAX 2500 // 2.5 ms pulse (started with value set at 2000 and calibrated with TowerPro SG92R servo to get further movement range)
 
 Adafruit_TiCoServo servo_left;
 Adafruit_TiCoServo servo_right;
@@ -92,6 +112,7 @@ void setup() {
   servo_left.attach(SERVO_LEFT_PIN, SERVO_MIN, SERVO_MAX);
   servo_right.attach(SERVO_RIGHT_PIN, SERVO_MIN, SERVO_MAX);
   Serial.begin(9600);
+  randomSeed(analogRead(0));
   CircuitPlayground.begin();
 }
 
@@ -185,22 +206,143 @@ servo_right.write(new_Servo_right_position_scaled_to_servo_range);              
 
   else 
   {
+  
+  
   Serial.println("CENTRED"); 
 
-  new_Servo_left_position = CENTRED_SERVO_LEFT_POSITION;                  // 0 to 1023
-  new_Servo_right_position = CENTRED_SERVO_RIGHT_POSITION;                  // 0 to 1023
-  new_Servo_left_position_scaled_to_servo_range = map(new_Servo_left_position, SERVO_SCALE_MIN, SERVO_SCALE_MAX, SERVO_MIN, SERVO_MAX);    // Scale to servo range
-  new_Servo_right_position_scaled_to_servo_range = map(new_Servo_right_position, SERVO_SCALE_MIN, 1023, SERVO_SCALE_MAX, SERVO_MAX);    // Scale to servo range
+ 
+ // next lines makes default ear position fixed, with no micro-animations
+ // new_Servo_left_position = CENTRED_SERVO_LEFT_POSITION;                  // 
+ // new_Servo_right_position = CENTRED_SERVO_RIGHT_POSITION;                  //
 
+
+ // Start: more interesting random movements of ears when no trigger events received (accelerometer is centred)
+
+/*************************** START: DEFAULT LEFT EAR ****************************************************/
+
+int randomDefaultEarBehaviour_LEFT = random(1,100);
+
+if (randomDefaultEarBehaviour_LEFT > 0 && randomDefaultEarBehaviour_LEFT < percentageTimeEarsRadomMicroMove + 1)
+{
+// This ear: do RadomMicroMove!
+  
+// do something...
+
+new_Servo_left_position = 
+random(
+CENTRED_SERVO_LEFT_POSITION - map(RANGE_FOR_RANDOM_MICRO_ANIMATIONS_RELATIVE_TO_CENTRED, 0, 100, SERVO_SCALE_MIN, SERVO_SCALE_MAX), 
+CENTRED_SERVO_LEFT_POSITION + map(RANGE_FOR_RANDOM_MICRO_ANIMATIONS_RELATIVE_TO_CENTRED, 0, 100, SERVO_SCALE_MIN, SERVO_SCALE_MAX)
+);
+
+}
+
+else if (randomDefaultEarBehaviour_LEFT > percentageTimeEarsRadomMicroMove && randomDefaultEarBehaviour_LEFT 
+< (percentageTimeEarsRadomMicroMove + percentageTimeEarsFlickForward) + 1)
+{
+// This ear: do FlickForward!
+// do something...
+
+new_Servo_left_position = PITCH_FORWARD_SERVO_LEFT_POSITION;
+
+}
+
+else if (randomDefaultEarBehaviour_LEFT > (percentageTimeEarsRadomMicroMove + percentageTimeEarsFlickForward) && randomDefaultEarBehaviour_LEFT 
+< (percentageTimeEarsRadomMicroMove + percentageTimeEarsFlickForward + percentageTimeEarsRadomFlickback) + 1)
+{
+// This ear: do Flickback!
+// do something...
+
+new_Servo_left_position = PITCH_BACK_SERVO_LEFT_POSITION;
+
+}
+
+else 
+{
+// if randomDefaultEarBehaviour_LEFT > (percentageTimeEarsRadomMicroMove + percentageTimeEarsFlickForward + percentageTimeEarsRadomFlickback) and = percentageTimeEarsStatic
+// This ear: do static / stay still / don't move!
+
+// do something...
+
+new_Servo_left_position = CENTRED_SERVO_LEFT_POSITION;                  // 
+
+}
+
+/*************************************** END: DEFAULT LEFT EAR ****************************************************/
+
+
+
+
+
+/*********************************** START: DEFAULT RIGHT EAR ****************************************************/
+
+int randomDefaultEarBehaviour_RIGHT = random(1,100);
+
+if (randomDefaultEarBehaviour_RIGHT > 0 && randomDefaultEarBehaviour_RIGHT < percentageTimeEarsRadomMicroMove + 1)
+{
+// This ear: do RadomMicroMove!
+  
+// do something...
+
+new_Servo_right_position = 
+random(
+CENTRED_SERVO_RIGHT_POSITION - map(RANGE_FOR_RANDOM_MICRO_ANIMATIONS_RELATIVE_TO_CENTRED, 0, 100, SERVO_SCALE_MIN, SERVO_SCALE_MAX), 
+CENTRED_SERVO_RIGHT_POSITION + map(RANGE_FOR_RANDOM_MICRO_ANIMATIONS_RELATIVE_TO_CENTRED, 0, 100, SERVO_SCALE_MIN, SERVO_SCALE_MAX)
+);
+
+}
+
+else if (randomDefaultEarBehaviour_RIGHT > percentageTimeEarsRadomMicroMove && randomDefaultEarBehaviour_RIGHT 
+< (percentageTimeEarsRadomMicroMove + percentageTimeEarsFlickForward) + 1)
+{
+// This ear: do FlickForward!
+// do something...
+
+new_Servo_right_position = PITCH_FORWARD_SERVO_RIGHT_POSITION;
+
+}
+
+else if (randomDefaultEarBehaviour_RIGHT > (percentageTimeEarsRadomMicroMove + percentageTimeEarsFlickForward) && randomDefaultEarBehaviour_RIGHT 
+< (percentageTimeEarsRadomMicroMove + percentageTimeEarsFlickForward + percentageTimeEarsRadomFlickback) + 1)
+{
+// This ear: do Flickback!
+// do something...
+
+new_Servo_right_position = PITCH_BACK_SERVO_RIGHT_POSITION;
+
+}
+
+else 
+{
+// if randomDefaultEarBehaviour_RIGHT > (percentageTimeEarsRadomMicroMove + percentageTimeEarsFlickForward + percentageTimeEarsRadomFlickback) and = percentageTimeEarsStatic
+// This ear: do static / stay still / don't move!
+
+// do something...
+
+new_Servo_right_position = CENTRED_SERVO_RIGHT_POSITION;                  // 
+
+}
+
+/********************************************************* END: DEFAULT RIGHT EAR ****************************************************/
+
+
+
+// Scale new positions to servo range
+  
+new_Servo_left_position_scaled_to_servo_range = map(new_Servo_left_position, SERVO_SCALE_MIN, SERVO_SCALE_MAX, SERVO_MIN, SERVO_MAX);    // Scale to servo range
+new_Servo_right_position_scaled_to_servo_range = map(new_Servo_right_position, SERVO_SCALE_MIN, 1023, SERVO_SCALE_MAX, SERVO_MAX);    // Scale to servo range
+
+
+
+// Move the servos / ears !!
   
 servo_left.write(new_Servo_left_position_scaled_to_servo_range);                               // Move servo
 servo_right.write(new_Servo_right_position_scaled_to_servo_range);                               // Move servo
 
   
   }
-  
- 
- 
+   
 
-  delay(500);
+  delay(DELAY_AFTER_EACH_LOOP_BEFORE_ACELEROMETER_CHECK);
+
+  
 }
