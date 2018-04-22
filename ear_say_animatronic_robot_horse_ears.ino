@@ -112,7 +112,7 @@ void setup() {
   servo_left.attach(SERVO_LEFT_PIN, SERVO_MIN, SERVO_MAX);
   servo_right.attach(SERVO_RIGHT_PIN, SERVO_MIN, SERVO_MAX);
   Serial.begin(9600);
-  randomSeed(analogRead(0));
+  randomSeed(analogRead(0)); // seed random numbers from unused pin 0 on board
   CircuitPlayground.begin();
 }
 
