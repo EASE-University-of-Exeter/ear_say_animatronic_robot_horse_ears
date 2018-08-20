@@ -12,14 +12,20 @@ Must: Include Copyright, Include License, State Changes, Disclose Source
 Copyright (c) 2018, The University of Exeter
 */
 
+// Leave one (and only one!) of the below horse config files below uncommented, 
+// to set random behaviour when centred to a particular horse personality / mood.
+// Using default.h as a template. create your own horse and add its profile here.
+// For example: dapples.h
 
 // ######### HORSE CONFIG FILES #####################################
 
-//#include "default.h"
+#include "default.h"
 //#include "free.h"
 //#include "duke.h"
-#include "tashe.h"
+//#include "tashe.h"
 //#include "smokie.h"
+//#include "test_horse_1.h"
+//#include "profile_edit_test.h"
 
 // ######### HORSE CONFIG FILES #####################################
 
@@ -76,6 +82,9 @@ Copyright (c) 2018, The University of Exeter
 */
 
 
+// Note the parameters below are the same ones found in the included header files for horse configuration.
+// If you comment out all of the header files (higher up), then you can uncomment the next bit and have the configuration inside this file.`
+
 /*
 
 // ##################################
@@ -83,10 +92,6 @@ Copyright (c) 2018, The University of Exeter
 // DEFAULT HORSE!!
 
 // Params for random micro default ear movements (when not specifically triggered for specific movement behaviour)
-
-#define DELAY_AFTER_EACH_LOOP_BEFORE_ACELEROMETER_CHECK 500 // Overall arousal / vigilance / reactiveness / responsiveness level
-
-#define RANGE_FOR_RANDOM_MICRO_ANIMATIONS_RELATIVE_TO_CENTRED 70 // on a scale of 0-100, which is auto mapped to current servo increment range
 
 #define PERCENTAGE_TIME_EARS_STATIC 90 // range 1-100% - % of time ears are static
 
@@ -98,6 +103,10 @@ Copyright (c) 2018, The University of Exeter
 // ##################################
 
 */
+
+#define DELAY_AFTER_EACH_LOOP_BEFORE_ACELEROMETER_CHECK 500 // Overall arousal / vigilance / reactiveness / responsiveness level
+
+#define RANGE_FOR_RANDOM_MICRO_ANIMATIONS_RELATIVE_TO_CENTRED 70 // on a scale of 0-100, which is auto mapped to current servo increment range
 
 
 float X, Y, Z;
